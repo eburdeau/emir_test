@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture : MtchgCrit > TxMtchgCrit contient 3 occurrences de OthrPmt (maxOccurs="unbounded"
+  dans TransactionMatchingCriteria6__1) et 2 occurrences de NtnlAmtFrstLegSchdlAmt.
+  Ce cas teste la numérotation __0 / __1 / __2 des enfants répétés de TxMtchgCrit.
+-->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
+  <DerivsTradRcncltnSttstclRpt>
+    <RcncltnSttstcs>
+      <Rpt>
+        <RefDt>2024-03-01</RefDt>
+        <RcncltnCtgrs>
+          <Rvvd>
+            <RptgCtrPty>
+              <LEI>529900T8BM49AURSDO55</LEI>
+            </RptgCtrPty>
+            <OthrCtrPty>
+              <Lgl>
+                <Id>
+                  <LEI>969500CHL179BON97023</LEI>
+                </Id>
+              </Lgl>
+            </OthrCtrPty>
+          </Rvvd>
+        </RcncltnCtgrs>
+        <TtlNbOfTxs>1</TtlNbOfTxs>
+        <TxDtls>
+          <CtrPtyId>
+            <RptgCtrPty>
+              <LEI>529900T8BM49AURSDO55</LEI>
+            </RptgCtrPty>
+          </CtrPtyId>
+          <TtlNbOfTxs>1</TtlNbOfTxs>
+          <RcncltnRpt>
+            <TxId>
+              <UnqIdr>
+                <UnqTxIdr>
+                  <Id>MULTIVAL_TX_001</Id>
+                </UnqTxIdr>
+              </UnqIdr>
+            </TxId>
+            <MtchgCrit>
+              <!--
+                TxMtchgCrit est un enfant unique de MtchgCrit (maxOccurs=1).
+                À l'intérieur, OthrPmt est maxOccurs="unbounded" → 3 occurrences.
+                NtnlAmtFrstLegSchdlAmt est aussi maxOccurs="unbounded" → 2 occurrences.
+              -->
+              <TxMtchgCrit>
+                <!-- OthrPmt occurrence 0 -->
+                <OthrPmt>
+                  <OthrPmtTp>
+                    <Val1>
+                      <Tp>INTR</Tp>
+                    </Val1>
+                    <Val2>
+                      <Tp>INTR</Tp>
+                    </Val2>
+                  </OthrPmtTp>
+                  <OthrPmtDt>
+                    <Val1>2024-01-15</Val1>
+                    <Val2>2024-01-15</Val2>
+                  </OthrPmtDt>
+                </OthrPmt>
+                <!-- OthrPmt occurrence 1 -->
+                <OthrPmt>
+                  <OthrPmtTp>
+                    <Val1>
+                      <Tp>CEAR</Tp>
+                    </Val1>
+                    <Val2>
+                      <Tp>CEAR</Tp>
+                    </Val2>
+                  </OthrPmtTp>
+                  <OthrPmtDt>
+                    <Val1>2024-02-15</Val1>
+                    <Val2>2024-02-15</Val2>
+                  </OthrPmtDt>
+                </OthrPmt>
+                <!-- OthrPmt occurrence 2 -->
+                <OthrPmt>
+                  <OthrPmtTp>
+                    <Val1>
+                      <Tp>PREMIUM</Tp>
+                    </Val1>
+                  </OthrPmtTp>
+                  <OthrPmtDt>
+                    <Val1>2024-03-15</Val1>
+                  </OthrPmtDt>
+                </OthrPmt>
+                <!-- NtnlAmtFrstLegSchdlAmt occurrence 0 -->
+                <NtnlAmtFrstLegSchdlAmt>
+                  <Val1>
+                    <Amt Ccy="EUR">1000000</Amt>
+                    <Sgn>true</Sgn>
+                  </Val1>
+                  <Val2>
+                    <Amt Ccy="EUR">1000000</Amt>
+                    <Sgn>true</Sgn>
+                  </Val2>
+                </NtnlAmtFrstLegSchdlAmt>
+                <!-- NtnlAmtFrstLegSchdlAmt occurrence 1 -->
+                <NtnlAmtFrstLegSchdlAmt>
+                  <Val1>
+                    <Amt Ccy="USD">2000000</Amt>
+                    <Sgn>false</Sgn>
+                  </Val1>
+                  <Val2>
+                    <Amt Ccy="USD">1900000</Amt>
+                    <Sgn>false</Sgn>
+                  </Val2>
+                </NtnlAmtFrstLegSchdlAmt>
+              </TxMtchgCrit>
+            </MtchgCrit>
+          </RcncltnRpt>
+        </TxDtls>
+      </Rpt>
+    </RcncltnSttstcs>
+  </DerivsTradRcncltnSttstclRpt>
+</Document>
