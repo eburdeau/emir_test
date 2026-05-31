@@ -10,6 +10,7 @@ import pytest
 from datrec_parser import flatten_datrec
 
 FIXTURES = Path(__file__).parent / "fixtures"
+OUTPUTS = Path(__file__).parent / "outputs"
 
 NS = 'xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02"'
 
@@ -79,6 +80,11 @@ class TestDataSetAction:
         df = flatten_datrec(FIXTURES / "datrec_dataset_action.xml")
         assert df["RcncltnSttstcs__DataSetActn"].iloc[0] == "NACT"
 
+    def test_csv_output(self):
+        out = OUTPUTS / "datrec_dataset_action.csv"
+        flatten_datrec(FIXTURES / "datrec_dataset_action.xml", output_csv=out)
+        assert out.exists()
+
 
 class TestMinimalFile:
     """Cas 2 : un seul Rpt avec un TxDtls et deux RcncltnRpt."""
@@ -125,6 +131,11 @@ class TestMinimalFile:
         # La 2e ligne n'a pas ce champ (MtchgCrit sans TxDtls)
         assert pd.isna(df[col].iloc[1])
 
+    def test_csv_output(self):
+        out = OUTPUTS / "datrec_minimal.csv"
+        flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=out)
+        assert out.exists()
+
 
 class TestMultiRpt:
     """Cas 3 : plusieurs Rpt avec dates différentes."""
@@ -154,26 +165,30 @@ class TestMultiRpt:
         utis = set(df[col].tolist())
         assert utis == {"RPT1TX001", "RPT2TX001", "RPT2TX002"}
 
-
-class TestCsvExport:
-    """Cas 4 : export CSV."""
-
-    def test_csv_created(self, tmp_path):
-        out = tmp_path / "out.csv"
-        flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=out)
+    def test_csv_output(self):
+        out = OUTPUTS / "datrec_multi_rpt.csv"
+        flatten_datrec(FIXTURES / "datrec_multi_rpt.xml", output_csv=out)
         assert out.exists()
 
-    def test_csv_readable(self, tmp_path):
-        out = tmp_path / "out.csv"
-        df = flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=out)
-        df_read = pd.read_csv(out)
+
+class TestCsvExport:
+    """Cas 4 : export CSV — vérifie le mécanisme d'écriture (fichier, contenu, valeurs)."""
+
+    _out = OUTPUTS / "datrec_csv_export.csv"
+
+    def test_csv_created(self):
+        flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=self._out)
+        assert self._out.exists()
+
+    def test_csv_readable(self):
+        df = flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=self._out)
+        df_read = pd.read_csv(self._out)
         assert len(df_read) == len(df)
         assert list(df_read.columns) == list(df.columns)
 
-    def test_csv_values_preserved(self, tmp_path):
-        out = tmp_path / "out.csv"
-        df = flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=out)
-        df_read = pd.read_csv(out)
+    def test_csv_values_preserved(self):
+        df = flatten_datrec(FIXTURES / "datrec_minimal.xml", output_csv=self._out)
+        df_read = pd.read_csv(self._out)
         assert df_read["Rpt__RefDt"].iloc[0] == df["Rpt__RefDt"].iloc[0]
 
 
@@ -253,6 +268,11 @@ class TestMultivalFields:
         tp1 = df["RcncltnRpt__MtchgCrit__TxMtchgCrit__OthrPmt__1__OthrPmtTp__Val1__Tp"].iloc[0]
         assert tp0 != tp1
 
+    def test_csv_output(self, df):
+        out = OUTPUTS / "datrec_multival.csv"
+        flatten_datrec(FIXTURES / "datrec_multival.xml", output_csv=out)
+        assert out.exists()
+
 
 class TestLargeFile:
     """Cas 6 : fichier volumineux généré — vérification du nombre de lignes et de la mémoire."""
@@ -278,6 +298,11 @@ class TestLargeFile:
         df = flatten_datrec(large_xml)
         col = "RcncltnRpt__TxId__UnqIdr__UnqTxIdr__Id"
         assert df[col].nunique() == self.N_TX_DTLS * self.RPTS_PER_TX
+
+    def test_csv_output(self, large_xml):
+        out = OUTPUTS / "datrec_large.csv"
+        flatten_datrec(large_xml, output_csv=out)
+        assert out.exists()
 
     def test_streaming_peak_memory(self, large_xml):
         """Le pic mémoire Python doit rester < 3× la taille du fichier XML.
