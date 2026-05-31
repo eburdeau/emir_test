@@ -34,9 +34,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>MULTIVAL_TX_001</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>MULTIVAL_TX_001</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>

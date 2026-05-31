@@ -36,9 +36,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>529900T8BM49AURSDO550000000001</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>529900T8BM49AURSDO550000000001</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>
@@ -61,9 +59,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>529900T8BM49AURSDO550000000002</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>529900T8BM49AURSDO550000000002</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>

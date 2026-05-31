@@ -29,9 +29,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>RPT1TX001</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>RPT1TX001</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>
@@ -73,9 +71,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>RPT2TX001</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>RPT2TX001</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>
@@ -91,9 +87,7 @@
           <RcncltnRpt>
             <TxId>
               <UnqIdr>
-                <UnqTxIdr>
-                  <Id>RPT2TX002</Id>
-                </UnqTxIdr>
+                <UnqTxIdr>RPT2TX002</UnqTxIdr>
               </UnqIdr>
             </TxId>
             <MtchgCrit>
