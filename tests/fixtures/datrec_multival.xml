@@ -3,8 +3,47 @@
   Fixture : MtchgCrit > TxMtchgCrit contient 3 occurrences de OthrPmt (maxOccurs="unbounded"
   dans TransactionMatchingCriteria6__1) et 2 occurrences de NtnlAmtFrstLegSchdlAmt.
   Ce cas teste la numérotation __0 / __1 / __2 des enfants répétés de TxMtchgCrit.
+  Enveloppe avec Business Application Header (head.001.001.01).
 -->
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
+<BizData xmlns:auth091="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
+
+  <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.01">
+    <!-- From : Trade Repository émetteur, identifié par LEI via Othr -->
+    <Fr>
+      <OrgId>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>529900T8BM49AURSDO55</Id>
+              <SchmeNm>
+                <Cd>LEIC</Cd>
+              </SchmeNm>
+            </Othr>
+          </OrgId>
+        </Id>
+      </OrgId>
+    </Fr>
+    <!-- To : contrepartie déclarante destinataire -->
+    <To>
+      <OrgId>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>969500CHL179BON97023</Id>
+              <SchmeNm>
+                <Cd>LEIC</Cd>
+              </SchmeNm>
+            </Othr>
+          </OrgId>
+        </Id>
+      </OrgId>
+    </To>
+    <BizMsgIdr>DATREC-20240301-MULTIVAL</BizMsgIdr>
+    <MsgDefIdr>auth.091.001.02</MsgDefIdr>
+    <CreDt>2024-03-01T08:00:00Z</CreDt>
+  </AppHdr>
+
+  <Document xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
   <DerivsTradRcncltnSttstclRpt>
     <RcncltnSttstcs>
       <Rpt>
@@ -114,4 +153,6 @@
       </Rpt>
     </RcncltnSttstcs>
   </DerivsTradRcncltnSttstclRpt>
-</Document>
+  </Document>
+
+</BizData>
