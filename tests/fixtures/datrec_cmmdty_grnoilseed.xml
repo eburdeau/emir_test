@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture : TxMtchgCrit > Cmmdty > Val1/Val2 > Agrcltrl > GrnOilSeed
+  Teste l'aplatissement du sous-type de commodité GrainOilSeed (AgriculturalCommodityOilSeed2).
+
+  Val1 : BasePdct=AGRI, SubPdct=GROS, AddtlSubPdct=SOYB (Soybeans)
+  Val2 : BasePdct=AGRI, SubPdct=GROS, AddtlSubPdct=RPSD (Rapeseed)
+  → cas de non-réconciliation sur AddtlSubPdct
+-->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
+  <DerivsTradRcncltnSttstclRpt>
+    <RcncltnSttstcs>
+      <Rpt>
+        <RefDt>2024-06-01</RefDt>
+        <RcncltnCtgrs>
+          <Rvvd>
+            <RptgCtrPty>
+              <LEI>529900T8BM49AURSDO55</LEI>
+            </RptgCtrPty>
+            <OthrCtrPty>
+              <Lgl>
+                <Id>
+                  <LEI>969500CHL179BON97023</LEI>
+                </Id>
+              </Lgl>
+            </OthrCtrPty>
+          </Rvvd>
+        </RcncltnCtgrs>
+        <TtlNbOfTxs>1</TtlNbOfTxs>
+        <TxDtls>
+          <CtrPtyId>
+            <RptgCtrPty>
+              <LEI>529900T8BM49AURSDO55</LEI>
+            </RptgCtrPty>
+            <OthrCtrPty>
+              <Lgl>
+                <Id>
+                  <LEI>969500CHL179BON97023</LEI>
+                </Id>
+              </Lgl>
+            </OthrCtrPty>
+          </CtrPtyId>
+          <TtlNbOfTxs>1</TtlNbOfTxs>
+          <RcncltnRpt>
+            <TxId>
+              <UnqIdr>
+                <UnqTxIdr>GRNOILSEED_TX_001</UnqTxIdr>
+              </UnqIdr>
+            </TxId>
+            <MtchgCrit>
+              <TxMtchgCrit>
+                <Cmmdty>
+                  <!-- Val1 : déclaration de la contrepartie déclarante -->
+                  <Val1>
+                    <Agrcltrl>
+                      <GrnOilSeed>
+                        <BasePdct>AGRI</BasePdct>
+                        <SubPdct>GROS</SubPdct>
+                        <AddtlSubPdct>SOYB</AddtlSubPdct>
+                      </GrnOilSeed>
+                    </Agrcltrl>
+                  </Val1>
+                  <!-- Val2 : déclaration de l'autre contrepartie -->
+                  <Val2>
+                    <Agrcltrl>
+                      <GrnOilSeed>
+                        <BasePdct>AGRI</BasePdct>
+                        <SubPdct>GROS</SubPdct>
+                        <AddtlSubPdct>RPSD</AddtlSubPdct>
+                      </GrnOilSeed>
+                    </Agrcltrl>
+                  </Val2>
+                </Cmmdty>
+              </TxMtchgCrit>
+            </MtchgCrit>
+          </RcncltnRpt>
+        </TxDtls>
+      </Rpt>
+    </RcncltnSttstcs>
+  </DerivsTradRcncltnSttstclRpt>
+</Document>

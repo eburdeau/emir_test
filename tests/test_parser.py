@@ -274,6 +274,81 @@ class TestMultivalFields:
         assert out.exists()
 
 
+class TestCmmdtyGrnOilSeed:
+    """Cas 6 : Cmmdty > Agrcltrl > GrnOilSeed dans TxMtchgCrit.
+
+    Val1 = SOYB, Val2 = RPSD → non-réconciliation sur AddtlSubPdct.
+    Vérifie que BasePdct, SubPdct et AddtlSubPdct sont correctement aplatis
+    pour les deux côtés de la comparaison.
+    """
+
+    _COL_BASE = "RcncltnRpt__MtchgCrit__TxMtchgCrit__Cmmdty__{side}__Agrcltrl__GrnOilSeed__{field}"
+
+    @pytest.fixture(scope="class")
+    def df(self):
+        return flatten_datrec(FIXTURES / "datrec_cmmdty_grnoilseed.xml")
+
+    def _col(self, side: str, field: str) -> str:
+        return self._COL_BASE.format(side=side, field=field)
+
+    def test_single_row(self, df):
+        assert len(df) == 1
+
+    def test_ref_dt(self, df):
+        assert df["Rpt__RefDt"].iloc[0] == "2024-06-01"
+
+    def test_uti(self, df):
+        col = "RcncltnRpt__TxId__UnqIdr__UnqTxIdr"
+        assert col in df.columns, f"colonnes disponibles : {list(df.columns)}"
+        assert df[col].iloc[0] == "GRNOILSEED_TX_001"
+
+    # --- colonnes présentes ---
+
+    def test_grnoilseed_columns_exist(self, df):
+        for side in ("Val1", "Val2"):
+            for field in ("BasePdct", "SubPdct", "AddtlSubPdct"):
+                col = self._col(side, field)
+                assert col in df.columns, (
+                    f"colonne manquante : {col}\n"
+                    f"colonnes Cmmdty disponibles : {[c for c in df.columns if 'Cmmdty' in c]}"
+                )
+
+    # --- valeurs Val1 ---
+
+    def test_val1_base_pdct(self, df):
+        assert df[self._col("Val1", "BasePdct")].iloc[0] == "AGRI"
+
+    def test_val1_sub_pdct(self, df):
+        assert df[self._col("Val1", "SubPdct")].iloc[0] == "GROS"
+
+    def test_val1_addtl_sub_pdct(self, df):
+        assert df[self._col("Val1", "AddtlSubPdct")].iloc[0] == "SOYB"
+
+    # --- valeurs Val2 ---
+
+    def test_val2_base_pdct(self, df):
+        assert df[self._col("Val2", "BasePdct")].iloc[0] == "AGRI"
+
+    def test_val2_sub_pdct(self, df):
+        assert df[self._col("Val2", "SubPdct")].iloc[0] == "GROS"
+
+    def test_val2_addtl_sub_pdct(self, df):
+        assert df[self._col("Val2", "AddtlSubPdct")].iloc[0] == "RPSD"
+
+    # --- non-réconciliation ---
+
+    def test_addtl_sub_pdct_mismatch(self, df):
+        """Val1 et Val2 ont des AddtlSubPdct différents → non-réconciliation."""
+        val1 = df[self._col("Val1", "AddtlSubPdct")].iloc[0]
+        val2 = df[self._col("Val2", "AddtlSubPdct")].iloc[0]
+        assert val1 != val2
+
+    def test_csv_output(self, df):
+        out = OUTPUTS / "datrec_cmmdty_grnoilseed.csv"
+        flatten_datrec(FIXTURES / "datrec_cmmdty_grnoilseed.xml", output_csv=out)
+        assert out.exists()
+
+
 class TestLargeFile:
     """Cas 6 : fichier volumineux généré — vérification du nombre de lignes et de la mémoire."""
 
