@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Exemple illustratif — deux transactions dans le même Rpt / TxDtls :
+    Tx 1 : IRS taux fixe (jambage 1) / flottant EURIBOR (jambage 2), EUR 10M
+           + 2 occurrences NtnlAmtFrstLegSchdlAmt  (amortissement)
+           + 2 occurrences OthrPmt  (INTR et CEAR)
+    Tx 2 : Forward sur commodité agricole GrnOilSeed (SOYB vs RPSD) → non-réconciliation
+-->
+<BizData>
+
+  <AppHdr xmlns="urn:iso:std:iso:20022:tech:xsd:head.001.001.01">
+    <Fr><OrgId><Id><OrgId><Othr>
+      <Id>529900T8BM49AURSDO55</Id>
+      <SchmeNm><Cd>LEIC</Cd></SchmeNm>
+    </Othr></OrgId></Id></OrgId></Fr>
+    <To><OrgId><Id><OrgId><Othr>
+      <Id>969500CHL179BON97023</Id>
+      <SchmeNm><Cd>LEIC</Cd></SchmeNm>
+    </Othr></OrgId></Id></OrgId></To>
+    <BizMsgIdr>DATREC-20240601-EXAMPLE</BizMsgIdr>
+    <MsgDefIdr>auth.091.001.02</MsgDefIdr>
+    <CreDt>2024-06-01T08:00:00Z</CreDt>
+  </AppHdr>
+
+  <Document xmlns="urn:iso:std:iso:20022:tech:xsd:auth.091.001.02">
+    <DerivsTradRcncltnSttstclRpt>
+      <RcncltnSttstcs>
+        <Rpt>
+          <RefDt>2024-06-01</RefDt>
+          <RcncltnCtgrs>
+            <Rvvd>
+              <RptgCtrPty><LEI>529900T8BM49AURSDO55</LEI></RptgCtrPty>
+              <OthrCtrPty>
+                <Lgl><Id><LEI>969500CHL179BON97023</LEI></Id></Lgl>
+              </OthrCtrPty>
+            </Rvvd>
+          </RcncltnCtgrs>
+          <TtlNbOfTxs>2</TtlNbOfTxs>
+
+          <TxDtls>
+            <CtrPtyId>
+              <RptgCtrPty><LEI>529900T8BM49AURSDO55</LEI></RptgCtrPty>
+              <OthrCtrPty>
+                <Lgl><Id><LEI>969500CHL179BON97023</LEI></Id></Lgl>
+              </OthrCtrPty>
+            </CtrPtyId>
+            <TtlNbOfTxs>2</TtlNbOfTxs>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 Transaction 1 : IRS fixe/flottant, EUR 10M, 3 ans
+                 Jambage 1 : taux fixe 3,50 % semestriel A360
+                 Jambage 2 : EURIBOR 3 mois + 10 bps
+                 Notionnel amortissable : 10M → 8M à mi-parcours
+                 Autres paiements : intérêt couru (INTR) et CEAR
+                 ═══════════════════════════════════════════════════════ -->
+            <RcncltnRpt>
+              <TxId>
+                <UnqIdr><UnqTxIdr>IRS_EUR_EURIBOR3M_001</UnqTxIdr></UnqIdr>
+              </TxId>
+              <MtchgCrit>
+                <TxMtchgCrit>
+
+                  <!-- Plateforme de négociation : hors marché (OTC) -->
+                  <PltfmIdr>
+                    <Val1>XOFF</Val1>
+                    <Val2>XOFF</Val2>
+                  </PltfmIdr>
+
+                  <!-- Date d'effet et date d'expiration -->
+                  <FctvDt>
+                    <Val1>2024-06-03</Val1>
+                    <Val2>2024-06-03</Val2>
+                  </FctvDt>
+                  <XprtnDt>
+                    <Val1>2027-06-03</Val1>
+                    <Val2>2027-06-03</Val2>
+                  </XprtnDt>
+
+                  <!-- Notionnel jambage 1 (scalaire) -->
+                  <NtnlAmtFrstLeg>
+                    <Val1><Amt Ccy="EUR">10000000</Amt><Sgn>true</Sgn></Val1>
+                    <Val2><Amt Ccy="EUR">10000000</Amt><Sgn>true</Sgn></Val2>
+                  </NtnlAmtFrstLeg>
+
+                  <!-- Échéancier notionnel jambage 1 — occurrence 0 : départ -->
+                  <NtnlAmtFrstLegSchdlAmt>
+                    <Val1><Amt Ccy="EUR">10000000</Amt><Sgn>true</Sgn></Val1>
+                    <Val2><Amt Ccy="EUR">10000000</Amt><Sgn>true</Sgn></Val2>
+                  </NtnlAmtFrstLegSchdlAmt>
+                  <!-- Échéancier notionnel jambage 1 — occurrence 1 : amortissement -->
+                  <NtnlAmtFrstLegSchdlAmt>
+                    <Val1><Amt Ccy="EUR">8000000</Amt><Sgn>true</Sgn></Val1>
+                    <Val2><Amt Ccy="EUR">7500000</Amt><Sgn>true</Sgn></Val2>
+                  </NtnlAmtFrstLegSchdlAmt>
+
+                  <!-- Autres paiements — occurrence 0 : intérêt couru -->
+                  <OthrPmt>
+                    <OthrPmtTp>
+                      <Val1><Tp>INTR</Tp></Val1>
+                      <Val2><Tp>INTR</Tp></Val2>
+                    </OthrPmtTp>
+                    <OthrPmtAmt>
+                      <Val1><Amt Ccy="EUR">175000</Amt></Val1>
+                      <Val2><Amt Ccy="EUR">175000</Amt></Val2>
+                    </OthrPmtAmt>
+                    <OthrPmtDt>
+                      <Val1>2024-12-03</Val1>
+                      <Val2>2024-12-03</Val2>
+                    </OthrPmtDt>
+                  </OthrPmt>
+                  <!-- Autres paiements — occurrence 1 : paiement de résiliation anticipée -->
+                  <OthrPmt>
+                    <OthrPmtTp>
+                      <Val1><Tp>CEAR</Tp></Val1>
+                      <Val2><Tp>CEAR</Tp></Val2>
+                    </OthrPmtTp>
+                    <OthrPmtDt>
+                      <Val1>2025-06-03</Val1>
+                      <Val2>2025-06-03</Val2>
+                    </OthrPmtDt>
+                  </OthrPmt>
+
+                  <!-- Taux fixe jambage 1 : 3,50 % -->
+                  <IntrstFxdRateFrstLeg>
+                    <Val1><Rate>0.035</Rate></Val1>
+                    <Val2><Rate>0.035</Rate></Val2>
+                  </IntrstFxdRateFrstLeg>
+                  <IntrstFxdRateFrstLegDayCnt>
+                    <Val1>A360</Val1>
+                    <Val2>A360</Val2>
+                  </IntrstFxdRateFrstLegDayCnt>
+                  <IntrstFxdRateFrstLegPmtFrqcyUnit>
+                    <Val1>MNTH</Val1>
+                    <Val2>MNTH</Val2>
+                  </IntrstFxdRateFrstLegPmtFrqcyUnit>
+                  <IntrstFxdRateFrstLegPmtFrqcyVal>
+                    <Val1>6</Val1>
+                    <Val2>6</Val2>
+                  </IntrstFxdRateFrstLegPmtFrqcyVal>
+
+                  <!-- Taux flottant jambage 2 : EURIBOR 3M + 10 bps -->
+                  <IntrstFltgRateScndLegId>
+                    <Val1>EU000A25C7G9</Val1>
+                    <Val2>EU000A25C7G9</Val2>
+                  </IntrstFltgRateScndLegId>
+                  <IntrstFltgRateScndLegDayCnt>
+                    <Val1>A360</Val1>
+                    <Val2>A360</Val2>
+                  </IntrstFltgRateScndLegDayCnt>
+                  <IntrstFltgRateScndLegPmtFrqcyUnit>
+                    <Val1>MNTH</Val1>
+                    <Val2>MNTH</Val2>
+                  </IntrstFltgRateScndLegPmtFrqcyUnit>
+                  <IntrstFltgRateScndLegPmtFrqcyVal>
+                    <Val1>3</Val1>
+                    <Val2>3</Val2>
+                  </IntrstFltgRateScndLegPmtFrqcyVal>
+                  <IntrstFltgRateScndLegSprd>
+                    <Val1><Rate>0.001</Rate></Val1>
+                    <Val2><Rate>0.001</Rate></Val2>
+                  </IntrstFltgRateScndLegSprd>
+
+                </TxMtchgCrit>
+                <CtrctMtchgCrit>
+                  <CtrctTp>
+                    <Val1>SWPT</Val1>
+                    <Val2>SWPT</Val2>
+                  </CtrctTp>
+                  <AsstClss>
+                    <Val1>IRSD</Val1>
+                    <Val2>IRSD</Val2>
+                  </AsstClss>
+                </CtrctMtchgCrit>
+              </MtchgCrit>
+            </RcncltnRpt>
+
+            <!-- ═══════════════════════════════════════════════════════
+                 Transaction 2 : Forward sur commodité agricole GrnOilSeed
+                 Val1 déclare SOYB (Soybeans), Val2 déclare RPSD (Rapeseed)
+                 → non-réconciliation sur AddtlSubPdct
+                 ═══════════════════════════════════════════════════════ -->
+            <RcncltnRpt>
+              <TxId>
+                <UnqIdr><UnqTxIdr>AGRI_GRNOILSEED_002</UnqTxIdr></UnqIdr>
+              </TxId>
+              <MtchgCrit>
+                <TxMtchgCrit>
+
+                  <FctvDt>
+                    <Val1>2024-09-02</Val1>
+                    <Val2>2024-09-02</Val2>
+                  </FctvDt>
+                  <XprtnDt>
+                    <Val1>2024-11-29</Val1>
+                    <Val2>2024-11-29</Val2>
+                  </XprtnDt>
+
+                  <!-- Prix de transaction : 425,50 EUR/tonne -->
+                  <TxPric>
+                    <Val1><MntryVal><Amt Ccy="EUR">425.50</Amt></MntryVal></Val1>
+                    <Val2><MntryVal><Amt Ccy="EUR">425.50</Amt></MntryVal></Val2>
+                  </TxPric>
+
+                  <!-- Quantité notionnelle : 1 000 tonnes -->
+                  <NtnlQtyFrstLeg>
+                    <Val1>1000</Val1>
+                    <Val2>1000</Val2>
+                  </NtnlQtyFrstLeg>
+
+                  <!-- Type de livraison : physique -->
+                  <DlvryTp>
+                    <Val1>PHYS</Val1>
+                    <Val2>PHYS</Val2>
+                  </DlvryTp>
+
+                  <!-- Commodité : GrnOilSeed — non-réconciliation sur AddtlSubPdct -->
+                  <Cmmdty>
+                    <Val1>
+                      <Agrcltrl>
+                        <GrnOilSeed>
+                          <BasePdct>AGRI</BasePdct>
+                          <SubPdct>GROS</SubPdct>
+                          <AddtlSubPdct>SOYB</AddtlSubPdct>
+                        </GrnOilSeed>
+                      </Agrcltrl>
+                    </Val1>
+                    <Val2>
+                      <Agrcltrl>
+                        <GrnOilSeed>
+                          <BasePdct>AGRI</BasePdct>
+                          <SubPdct>GROS</SubPdct>
+                          <AddtlSubPdct>RPSD</AddtlSubPdct>
+                        </GrnOilSeed>
+                      </Agrcltrl>
+                    </Val2>
+                  </Cmmdty>
+
+                </TxMtchgCrit>
+                <CtrctMtchgCrit>
+                  <CtrctTp>
+                    <Val1>FORW</Val1>
+                    <Val2>FORW</Val2>
+                  </CtrctTp>
+                  <AsstClss>
+                    <Val1>COMM</Val1>
+                    <Val2>COMM</Val2>
+                  </AsstClss>
+                </CtrctMtchgCrit>
+              </MtchgCrit>
+            </RcncltnRpt>
+
+          </TxDtls>
+        </Rpt>
+      </RcncltnSttstcs>
+    </DerivsTradRcncltnSttstclRpt>
+  </Document>
+
+</BizData>

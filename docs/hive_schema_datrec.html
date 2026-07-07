@@ -1,0 +1,987 @@
+<title>Schéma Hive — DATREC auth.091.001.02</title>
+<style>
+/* ─── TOKENS ─── */
+:root {
+  --steel:    #2E6FAF;
+  --steel-lt: #D6E6F5;
+  --amber:    #8A5F06;
+  --amber-lt: #FFF3D6;
+  --teal:     #1A7A6E;
+  --red:      #B33A2A;
+
+  --bg:          #F1F4F8;
+  --bg-2:        #E4E9F0;
+  --surface:     #FFFFFF;
+  --border:      #CBD5E0;
+  --text:        #162030;
+  --text-2:      #4A5E72;
+  --text-3:      #7A8FA6;
+
+  --code-bg:     #0E1825;
+  --code-text:   #C8D8EA;
+  --kw:          #6EB3F0;
+  --type-c:      #52C4B4;
+  --nm:          #F5C842;
+  --cm:          #5B7A8E;
+  --str:         #A8D990;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:       #0C1520;
+    --bg-2:     #101C2B;
+    --surface:  #131F30;
+    --border:   #1E3048;
+    --text:     #D4E4F2;
+    --text-2:   #7A9AB8;
+    --text-3:   #4A6A86;
+    --steel-lt: #0E2238;
+    --amber-lt: #1E1408;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:       #0C1520;
+  --bg-2:     #101C2B;
+  --surface:  #131F30;
+  --border:   #1E3048;
+  --text:     #D4E4F2;
+  --text-2:   #7A9AB8;
+  --text-3:   #4A6A86;
+  --steel-lt: #0E2238;
+  --amber-lt: #1E1408;
+}
+:root[data-theme="light"] {
+  --bg:          #F1F4F8;
+  --bg-2:        #E4E9F0;
+  --surface:     #FFFFFF;
+  --border:      #CBD5E0;
+  --text:        #162030;
+  --text-2:      #4A5E72;
+  --text-3:      #7A8FA6;
+  --steel-lt:    #D6E6F5;
+  --amber-lt:    #FFF3D6;
+}
+
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ─── LAYOUT ─── */
+.page {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  grid-template-rows: auto 1fr;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  gap: 0 2.5rem;
+}
+@media (max-width: 780px) {
+  .page { grid-template-columns: 1fr; padding: 0 1rem; }
+  .sidebar { display: none; }
+}
+
+/* ─── HEADER ─── */
+.site-header {
+  grid-column: 1 / -1;
+  padding: 2.5rem 0 2rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+.header-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-bottom: 0.6rem;
+}
+.site-header h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+.site-header h1 .mono {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.85em;
+  color: var(--amber);
+  font-weight: 600;
+}
+.header-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  color: var(--text-2);
+  font-size: 0.82rem;
+}
+.header-meta span { display: flex; align-items: center; gap: 0.35rem; }
+.badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2em 0.55em;
+  border-radius: 2px;
+  background: var(--steel-lt);
+  color: var(--steel);
+}
+.badge.amber { background: var(--amber-lt); color: var(--amber); }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  grid-row: 2;
+  position: sticky;
+  top: 1.5rem;
+  height: fit-content;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+.toc-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.toc { list-style: none; }
+.toc li + li { margin-top: 0.1rem; }
+.toc a {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.toc a:hover { color: var(--steel); border-left-color: var(--steel); }
+.toc a.sub { padding-left: 1.2rem; font-size: 0.75rem; color: var(--text-3); }
+.toc a.sub:hover { color: var(--steel); }
+
+/* ─── MAIN CONTENT ─── */
+.content { grid-row: 2; min-width: 0; padding-bottom: 4rem; }
+
+/* ─── SECTIONS ─── */
+section + section { margin-top: 3rem; }
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.section-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.table-name {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+/* ─── CALLOUT ─── */
+.callout {
+  background: var(--steel-lt);
+  border-left: 3px solid var(--steel);
+  border-radius: 0 3px 3px 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text-2);
+  margin: 1rem 0;
+  line-height: 1.55;
+}
+.callout.amber {
+  background: var(--amber-lt);
+  border-left-color: var(--amber);
+}
+.callout strong { color: var(--text); font-weight: 600; }
+
+/* ─── SCHEMA DIAGRAM ─── */
+.schema-diagram {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.25rem 1.5rem;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.76rem;
+  line-height: 1.8;
+  color: var(--text-2);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.schema-diagram .hl { color: var(--amber); font-weight: 700; }
+.schema-diagram .kw { color: var(--steel); }
+.schema-diagram .dim { color: var(--text-3); }
+
+/* ─── CODE BLOCKS ─── */
+.code-wrap { overflow-x: auto; margin: 1rem 0; }
+pre.sql {
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.76rem;
+  line-height: 1.75;
+  color: var(--code-text);
+  min-width: 100%;
+  width: max-content;
+}
+/* Syntax tokens */
+.kw  { color: var(--kw);    font-weight: 600; }
+.tp  { color: var(--type-c); }
+.tn  { color: var(--nm);    font-weight: 600; }
+.cm  { color: var(--cm);    font-style: italic; }
+.st  { color: var(--str); }
+.pn  { color: #C8A0E0; } /* partition */
+
+/* ─── COLUMN TABLE ─── */
+.col-summary {
+  width: 100%;
+  font-size: 0.78rem;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+}
+.col-summary th {
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 0.45rem 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+.col-summary td {
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.col-summary td:first-child {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text);
+  font-size: 0.73rem;
+  white-space: nowrap;
+}
+.col-summary td:nth-child(2) {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  color: var(--teal);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.col-summary tr:hover td { background: var(--bg-2); }
+.required { color: var(--red); font-size: 0.65rem; font-weight: 700; vertical-align: super; }
+
+/* ─── ARRAY BADGE ─── */
+.arr-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.1em 0.4em;
+  background: #1A3A1E;
+  color: #6ED490;
+  border-radius: 2px;
+  margin-left: 0.3rem;
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  z-index: 100;
+}
+.theme-btn:hover { color: var(--text); }
+
+/* ─── QUERY EXAMPLES ─── */
+.query-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.4rem;
+}
+
+/* ─── MISC ─── */
+p { color: var(--text-2); font-size: 0.88rem; margin: 0.6rem 0; }
+ul { color: var(--text-2); font-size: 0.85rem; padding-left: 1.4rem; }
+ul li { margin: 0.25rem 0; }
+strong { color: var(--text); font-weight: 600; }
+code {
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.82em;
+  background: var(--bg-2);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+  color: var(--amber);
+}
+a { color: var(--steel); }
+</style>
+
+<button class="theme-btn" onclick="toggleTheme()">☀ / ☾</button>
+
+<div class="page">
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-eyebrow">EMIR Refit · ISO 20022 · Data Engineering</div>
+  <h1>Schéma Hive — <span class="mono">auth.091.001.02</span> DATREC</h1>
+  <div class="header-meta">
+    <span><span class="badge">auth.091.001.02</span></span>
+    <span><span class="badge">ESMA UG v1.0.0</span></span>
+    <span><span class="badge amber">3 tables</span></span>
+    <span style="color:var(--text-3)">Parquet / SNAPPY · Partition : <code>ref_dt DATE</code></span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" aria-label="Table des matières">
+  <div class="toc-label">Contenu</div>
+  <ul class="toc">
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#t1">Table 1 · datrec_msg_header</a></li>
+    <li><a href="#t2">Table 2 · datrec_rpt</a></li>
+    <li><a href="#t3">Table 3 · datrec_rcncltn_rpt</a></li>
+    <li><a class="sub" href="#t3-keys">Clés &amp; contexte</a></li>
+    <li><a class="sub" href="#t3-ctrpty">Contreparties</a></li>
+    <li><a class="sub" href="#t3-ctrpty-crit">Critères contrepartie</a></li>
+    <li><a class="sub" href="#t3-vltn">Critères valorisation</a></li>
+    <li><a class="sub" href="#t3-ctrct">Critères contrat</a></li>
+    <li><a class="sub" href="#t3-tx">Critères transaction</a></li>
+    <li><a class="sub" href="#t3-arrays">Colonnes ARRAY</a></li>
+    <li><a class="sub" href="#t3-meta">Métadonnées</a></li>
+    <li><a href="#queries">Exemples de requêtes</a></li>
+    <li><a href="#choices">Choix de conception</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="content">
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="architecture">
+  <div class="section-header">
+    <h2>Architecture — modèle 3 tables</h2>
+  </div>
+
+  <p>Le message DATREC suit une hiérarchie <strong>Document → Rpt[] → TxDtls[] → RcncltnRpt[]</strong>.
+  Le schéma Hive est organisé en trois tables correspondant aux trois niveaux d'agrégation naturels.</p>
+
+  <div class="schema-diagram">
+<span class="hl">Document</span>
+└── DerivsTradRcncltnSttstclRpt
+    └── RcncltnSttstcs  <span class="dim">(choice: DataSetActn | Rpt[])</span>
+        │
+        ├── <span class="kw">DataSetActn</span>  <span class="dim">→ ligne dans datrec_rpt (dataset_actn = 'NOTX')</span>
+        │
+        └── <span class="kw">Rpt[]</span>  <span class="dim">maxOccurs=unbounded</span>   <span class="hl">── TABLE datrec_rpt</span>
+            ├── RefDt
+            ├── RcncltnCtgrs
+            ├── TtlNbOfTxs
+            └── <span class="kw">TxDtls[]</span>  <span class="dim">maxOccurs=500 000</span>
+                ├── CtrPtyId
+                ├── TtlNbOfTxs
+                └── <span class="kw">RcncltnRpt[]</span>  <span class="dim">maxOccurs=unbounded</span>  <span class="hl">── TABLE datrec_rcncltn_rpt</span>
+                    ├── TxId (UTI)
+                    └── MtchgCrit
+                        ├── CtrPtyMtchgCrit
+                        ├── ValtnMtchgCrit
+                        ├── CtrctMtchgCrit
+                        └── TxMtchgCrit  <span class="dim">(dont éléments ARRAY[])</span>
+
+<span class="kw">BizData / AppHdr</span>  <span class="dim">(head.001.001.01, facultatif)</span>  <span class="hl">── TABLE datrec_msg_header</span>
+  </div>
+
+  <div class="callout">
+    <strong>Principe de dénormalisation.</strong> La table principale <code>datrec_rcncltn_rpt</code> répète sur chaque ligne les champs du <code>Rpt</code> parent (RefDt, catégories) et du <code>TxDtls</code> parent (identifiants contrepartie), évitant ainsi les jointures à chaud pour les analyses courantes. Les champs à cardinalité <em>unbounded</em> sont stockés en <code>ARRAY&lt;STRUCT&lt;&hellip;&gt;&gt;</code> et exploitables via <code>LATERAL VIEW EXPLODE</code>.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="t1">
+  <div class="section-header">
+    <h2>Table 1 · <span class="table-name">datrec_msg_header</span></h2>
+    <span class="badge">facultative</span>
+  </div>
+
+  <p>Stocke l'en-tête <strong>Business Application Header</strong> (head.001.001.01) quand le fichier XML est livré dans une enveloppe <code>BizData</code>. Alimentée 1 fois par fichier source. Joignable sur <code>biz_msg_idr</code>.</p>
+
+  <div class="callout amber">
+    <strong>Partition :</strong> <code>ingestion_dt DATE</code> (date de chargement, pas de date métier — le BAH ne porte pas de date de référence propre).
+  </div>
+
+  <div class="code-wrap"><pre class="sql"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="tn">datrec_msg_header</span> (
+  biz_msg_idr   <span class="tp">STRING</span>     <span class="cm">-- AppHdr/BizMsgIdr — identifiant message (max 35)</span>
+ ,msg_def_idr   <span class="tp">STRING</span>     <span class="cm">-- AppHdr/MsgDefIdr — doit valoir "auth.091.001.02"</span>
+ ,cre_dt        <span class="tp">TIMESTAMP</span>  <span class="cm">-- AppHdr/CreDt — horodatage UTC (format Z imposé)</span>
+ ,fr_lei        <span class="tp">STRING</span>     <span class="cm">-- AppHdr/Fr/OrgId/Id/OrgId/Othr/Id — LEI émetteur (TR)</span>
+ ,to_lei        <span class="tp">STRING</span>     <span class="cm">-- AppHdr/To/OrgId/Id/OrgId/Othr/Id — LEI destinataire</span>
+ ,src_file_nm   <span class="tp">STRING</span>     <span class="cm">-- Nom du fichier XML source</span>
+ ,ingestion_ts  <span class="tp">TIMESTAMP</span>  <span class="cm">-- Horodatage du chargement (UTC)</span>
+)
+<span class="kw">COMMENT</span> <span class="st">'En-tête BAH (head.001.001.01) — 1 ligne par message'</span>
+<span class="kw">STORED AS</span> PARQUET
+<span class="kw">TBLPROPERTIES</span> (<span class="st">'parquet.compress'</span> = <span class="st">'SNAPPY'</span>)
+<span class="kw">PARTITIONED BY</span> (<span class="pn">ingestion_dt DATE</span>);</pre></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="t2">
+  <div class="section-header">
+    <h2>Table 2 · <span class="table-name">datrec_rpt</span></h2>
+    <span class="badge">1 ligne / Rpt</span>
+  </div>
+
+  <p>Résumé statistique par période de référence et paire de contreparties. Contient également la ligne <code>DataSetActn</code> si aucune donnée n'est disponible pour la période.</p>
+
+  <div class="code-wrap"><pre class="sql"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="tn">datrec_rpt</span> (
+
+  biz_msg_idr              <span class="tp">STRING</span>    <span class="cm">-- Clé de jointure datrec_msg_header (nullable)</span>
+
+  <span class="cm">-- Cas DataSetActn (choix exclusif avec Rpt[])</span>
+ ,dataset_actn             <span class="tp">STRING</span>    <span class="cm">-- 'NOTX' — NULL si des Rpt sont présents</span>
+
+  <span class="cm">-- RcncltnCtgrs > ReportingRequirement2Choice</span>
+ ,rcncltn_ctgrs_tp         <span class="tp">STRING</span>    <span class="cm">-- 'RptgRqrmnt' | 'NoRptgRqrmnt'</span>
+
+  <span class="cm">-- RptgRqrmnt > Rvvd (transactions réactivées)</span>
+ ,rvvd_rptg_ctr_pty_lei    <span class="tp">STRING</span>    <span class="cm">-- Rvvd/RptgCtrPty/LEI</span>
+ ,rvvd_rptg_ctr_pty_eic    <span class="tp">STRING</span>    <span class="cm">-- Rvvd/RptgCtrPty/EIC</span>
+ ,rvvd_othr_ctr_pty_lgl_lei <span class="tp">STRING</span>   <span class="cm">-- Rvvd/OthrCtrPty/Lgl/Id/LEI</span>
+ ,rvvd_othr_ctr_pty_ntrl_id <span class="tp">STRING</span>   <span class="cm">-- Rvvd/OthrCtrPty/Ntrl/Id</span>
+
+  <span class="cm">-- RptgRqrmnt > FrthrMod (transactions modifiées ultérieurement)</span>
+ ,frthr_mod_rptg_ctr_pty_lei     <span class="tp">STRING</span> <span class="cm">-- FrthrMod/RptgCtrPty/LEI</span>
+ ,frthr_mod_othr_ctr_pty_lgl_lei <span class="tp">STRING</span> <span class="cm">-- FrthrMod/OthrCtrPty/Lgl/Id/LEI</span>
+
+  <span class="cm">-- NoRptgRqrmnt (aucune obligation de reporting)</span>
+ ,no_rptg_rvvd              <span class="tp">BOOLEAN</span>   <span class="cm">-- NoRptgRqrmnt/Rvvd</span>
+ ,no_rptg_frthr_mod         <span class="tp">BOOLEAN</span>   <span class="cm">-- NoRptgRqrmnt/FrthrMod</span>
+
+  <span class="cm">-- Totaux</span>
+ ,ttl_nb_of_txs             <span class="tp">INT</span>       <span class="cm">-- Rpt/TtlNbOfTxs</span>
+
+  <span class="cm">-- Métadonnées</span>
+ ,src_file_nm               <span class="tp">STRING</span>
+ ,ingestion_ts              <span class="tp">TIMESTAMP</span>
+)
+<span class="kw">COMMENT</span> <span class="st">'1 ligne par Rpt — statistiques globales par période de référence'</span>
+<span class="kw">STORED AS</span> PARQUET
+<span class="kw">TBLPROPERTIES</span> (<span class="st">'parquet.compress'</span> = <span class="st">'SNAPPY'</span>)
+<span class="kw">PARTITIONED BY</span> (<span class="pn">ref_dt DATE</span>);</pre></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="t3">
+  <div class="section-header">
+    <h2>Table 3 · <span class="table-name">datrec_rcncltn_rpt</span></h2>
+    <span class="badge amber">table principale</span>
+    <span class="badge">1 ligne / UTI</span>
+  </div>
+
+  <p>Table de faits centrale. Dénormalise <code>Rpt</code>, <code>TxDtls</code> et <code>RcncltnRpt</code> en une ligne par transaction identifiée par son UTI. Les éléments à occurrence <em>unbounded</em> dans <code>TxMtchgCrit</code> sont stockés en colonnes <code>ARRAY&lt;STRUCT&lt;&hellip;&gt;&gt;</code>.</p>
+
+  <!-- CLÉS -->
+  <div class="section-header" id="t3-keys" style="margin-top:1.5rem">
+    <h3>Clés &amp; contexte propagé</h3>
+  </div>
+  <div class="code-wrap"><pre class="sql"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="tn">datrec_rcncltn_rpt</span> (
+
+  biz_msg_idr   <span class="tp">STRING</span>    <span class="cm">-- Clé vers datrec_msg_header</span>
+ ,ref_dt_ctx    <span class="tp">DATE</span>      <span class="cm">-- Rpt/RefDt propagé (différent de la partition ref_dt)</span></pre></div>
+
+  <!-- CONTREPARTIES -->
+  <div class="section-header" id="t3-ctrpty" style="margin-top:1.5rem">
+    <h3>Identifiants contreparties — <code>TxDtls/CtrPtyId</code></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">CounterpartyData91__1</span>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- TxDtls/CtrPtyId (CounterpartyData91__1)</span>
+ ,rptg_ctr_pty_lei          <span class="tp">STRING</span>  <span class="cm">-- RptgCtrPty/LEI (ISO 17442, 20 car.)</span>
+ ,rptg_ctr_pty_eic          <span class="tp">STRING</span>  <span class="cm">-- RptgCtrPty/EIC</span>
+ ,rptg_ctr_pty_ctry         <span class="tp">STRING</span>  <span class="cm">-- RptgCtrPty/Ctry (ISO 3166 A-2)</span>
+ ,rptg_ctr_pty_ctry_sub     <span class="tp">STRING</span>  <span class="cm">-- RptgCtrPty/CtrySubDvsn</span>
+ ,othr_ctr_pty_lgl_lei      <span class="tp">STRING</span>  <span class="cm">-- OthrCtrPty/Lgl/Id/LEI</span>
+ ,othr_ctr_pty_ntrl_id      <span class="tp">STRING</span>  <span class="cm">-- OthrCtrPty/Ntrl/Id</span>
+ ,rpt_submitg_ntty_lei      <span class="tp">STRING</span>  <span class="cm">-- RptSubmitgNtty/LEI</span>
+ ,ntty_rspnsbl_for_rpt_lei  <span class="tp">STRING</span>  <span class="cm">-- NttyRspnsblForRpt/LEI</span>
+ ,tx_dtls_ttl_nb_of_txs     <span class="tp">INT</span>     <span class="cm">-- TxDtls/TtlNbOfTxs</span>
+
+  <span class="cm">-- TxId/UnqIdr (UniqueTransactionIdentifier2Choice__1)</span>
+ ,unq_tx_idr                <span class="tp">STRING</span>  <span class="cm">-- UnqTxIdr — UTI normalisé ISO 23897 (max 52 car.)</span>
+ ,prtry_id                  <span class="tp">STRING</span>  <span class="cm">-- Prtry/Id — identifiant propriétaire</span>
+ ,prtry_id_issr             <span class="tp">STRING</span>  <span class="cm">-- Prtry/Issr</span></pre></div>
+
+  <!-- CRITÈRES CONTREPARTIE -->
+  <div class="section-header" id="t3-ctrpty-crit" style="margin-top:1.5rem">
+    <h3>Critères contrepartie — <code>CtrPtyMtchgCrit</code></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">CounterpartyMatchingCriteria6__1</span>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- DrctnOrSd (Direction4Choice__1) : direction ou côté de la transaction</span>
+ ,drctn_fst_leg_val1        <span class="tp">STRING</span>  <span class="cm">-- Val1/Drctn/DrctnOfTheFrstLeg — MAKE | TAKE</span>
+ ,drctn_scnd_leg_val1       <span class="tp">STRING</span>  <span class="cm">-- Val1/Drctn/DrctnOfTheScndLeg</span>
+ ,ctr_pty_sd_val1           <span class="tp">STRING</span>  <span class="cm">-- Val1/CtrPtySd — BUYER | SLLR</span>
+ ,drctn_fst_leg_val2        <span class="tp">STRING</span>
+ ,drctn_scnd_leg_val2       <span class="tp">STRING</span>
+ ,ctr_pty_sd_val2           <span class="tp">STRING</span></pre></div>
+
+  <!-- CRITÈRES VALORISATION -->
+  <div class="section-header" id="t3-vltn" style="margin-top:1.5rem">
+    <h3>Critères valorisation — <code>ValtnMtchgCrit</code></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">ValuationMatchingCriteria1</span>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- CtrctVal (valeur de marché du contrat)</span>
+ ,vltn_ctrct_val_val1_amt   <span class="tp">DECIMAL(25,5)</span>
+ ,vltn_ctrct_val_val1_ccy   <span class="tp">STRING</span>        <span class="cm">-- ISO 4217</span>
+ ,vltn_ctrct_val_val1_sgn   <span class="tp">BOOLEAN</span>       <span class="cm">-- true = positif</span>
+ ,vltn_ctrct_val_val2_amt   <span class="tp">DECIMAL(25,5)</span>
+ ,vltn_ctrct_val_val2_ccy   <span class="tp">STRING</span>
+ ,vltn_ctrct_val_val2_sgn   <span class="tp">BOOLEAN</span>
+ ,vltn_tp_val               <span class="tp">STRING</span>        <span class="cm">-- Tp/Val : CCPV | MTMA | MTMO</span></pre></div>
+
+  <!-- CRITÈRES CONTRAT -->
+  <div class="section-header" id="t3-ctrct" style="margin-top:1.5rem">
+    <h3>Critères contrat — <code>CtrctMtchgCrit</code></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">ContractMatchingCriteria3__1</span>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- Identifiants instrument</span>
+ ,isin_val1                 <span class="tp">STRING</span>   <span class="cm">-- ISIN/Val1 (ISO 6166, 12 car.)</span>
+ ,isin_val2                 <span class="tp">STRING</span>
+ ,unq_pdct_idr_val1         <span class="tp">STRING</span>   <span class="cm">-- UnqPdctIdr/Val1/Id — UPI (max 12)</span>
+ ,unq_pdct_idr_val2         <span class="tp">STRING</span>
+ ,altrntv_instrm_id_val1    <span class="tp">STRING</span>   <span class="cm">-- AltrntvInstrmId/Val1 — AII</span>
+ ,altrntv_instrm_id_val2    <span class="tp">STRING</span>
+ ,pdct_clssfctn_val1        <span class="tp">STRING</span>   <span class="cm">-- PdctClssfctn/Val1 — CFI (ISO 10962, 6 car.)</span>
+ ,pdct_clssfctn_val2        <span class="tp">STRING</span>
+ ,ctrct_tp_val1             <span class="tp">STRING</span>   <span class="cm">-- CtrctTp/Val1 — type contrat financier</span>
+ ,ctrct_tp_val2             <span class="tp">STRING</span>
+ ,asst_clss_val1            <span class="tp">STRING</span>   <span class="cm">-- AsstClss/Val1 — classe d'actif</span>
+ ,asst_clss_val2            <span class="tp">STRING</span>
+ ,deriv_on_crpt_asst_val    <span class="tp">BOOLEAN</span>  <span class="cm">-- DerivBasedOnCrptAsst/Val</span>
+
+  <span class="cm">-- Sous-jacent (InstrumentIdentification6Choice__1)</span>
+ ,undrlg_isin_val1          <span class="tp">STRING</span>   <span class="cm">-- UndrlygInstrm/Val1/ISIN</span>
+ ,undrlg_altrntv_val1       <span class="tp">STRING</span>   <span class="cm">-- UndrlygInstrm/Val1/AltrntvInstrmId</span>
+ ,undrlg_bskt_strr_val1     <span class="tp">STRING</span>   <span class="cm">-- UndrlygInstrm/Val1/Bskt/Strr (LEI structureur)</span>
+ ,undrlg_bskt_id_val1       <span class="tp">STRING</span>   <span class="cm">-- UndrlygInstrm/Val1/Bskt/Id</span>
+ ,undrlg_isin_val2          <span class="tp">STRING</span>
+ ,undrlg_altrntv_val2       <span class="tp">STRING</span>
+ ,undrlg_bskt_strr_val2     <span class="tp">STRING</span>
+ ,undrlg_bskt_id_val2       <span class="tp">STRING</span>
+ ,sttlm_ccy_val1            <span class="tp">STRING</span>   <span class="cm">-- SttlmCcy/Val1 (ISO 4217)</span>
+ ,sttlm_ccy_val2            <span class="tp">STRING</span>
+ ,sttlm_ccy_scnd_leg_val1   <span class="tp">STRING</span>   <span class="cm">-- SttlmCcyScndLeg/Val1</span>
+ ,sttlm_ccy_scnd_leg_val2   <span class="tp">STRING</span></pre></div>
+
+  <!-- CRITÈRES TRANSACTION -->
+  <div class="section-header" id="t3-tx" style="margin-top:1.5rem">
+    <h3>Critères transaction — <code>TxMtchgCrit</code></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">TransactionMatchingCriteria6__1 · champs scalaires</span>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- Identifiants UTI</span>
+ ,rpt_trckg_nb_val1         <span class="tp">STRING</span>    <span class="cm">-- RptTrckgNb/Val1 — numéro de suivi TR</span>
+ ,rpt_trckg_nb_val2         <span class="tp">STRING</span>
+ ,unq_tx_idr_mtch_val1      <span class="tp">STRING</span>    <span class="cm">-- TxMtchgCrit/UnqTxIdr/Val1 (UTI déclaré par côté)</span>
+ ,unq_tx_idr_mtch_val2      <span class="tp">STRING</span>
+ ,prr_unq_tx_idr_val1       <span class="tp">STRING</span>    <span class="cm">-- PrrUnqTxIdr/Val1 — UTI antérieur</span>
+ ,prr_unq_tx_idr_val2       <span class="tp">STRING</span>
+ ,sbsqnt_pos_unq_tx_idr_val1 <span class="tp">STRING</span>  <span class="cm">-- SbsqntPosUnqTxIdr/Val1</span>
+ ,sbsqnt_pos_unq_tx_idr_val2 <span class="tp">STRING</span>
+ ,dlta_val1                 <span class="tp">DECIMAL(24,19)</span> <span class="cm">-- Dlta/Val1</span>
+ ,dlta_val2                 <span class="tp">DECIMAL(24,19)</span>
+
+  <span class="cm">-- Confirmation &amp; compensation</span>
+ ,trad_conf_tp_val1         <span class="tp">STRING</span>    <span class="cm">-- TradConf/Val1/Confd/Tp | NonConfd</span>
+ ,trad_conf_tm_stmp_val1    <span class="tp">TIMESTAMP</span>
+ ,trad_conf_tp_val2         <span class="tp">STRING</span>
+ ,trad_conf_tm_stmp_val2    <span class="tp">TIMESTAMP</span>
+ ,trad_clr_oblgtn_val       <span class="tp">STRING</span>    <span class="cm">-- TradClrOblgtn/Val</span>
+ ,trad_clr_sts_clrd_val1    <span class="tp">STRING</span>    <span class="cm">-- TradClrSts/Val1/Clrd — LEI CCP</span>
+ ,trad_clr_sts_non_clrd_val1 <span class="tp">STRING</span>  <span class="cm">-- TradClrSts/Val1/NonClrd — code exemption</span>
+ ,trad_clr_sts_clrd_val2    <span class="tp">STRING</span>
+ ,trad_clr_sts_non_clrd_val2 <span class="tp">STRING</span>
+
+  <span class="cm">-- Accord-cadre</span>
+ ,mstr_agrmt_tp_val1        <span class="tp">STRING</span>    <span class="cm">-- MstrAgrmtTp/Val1 — MasterAgreementType2Code</span>
+ ,mstr_agrmt_tp_val2        <span class="tp">STRING</span>
+ ,mstr_agrmt_vrsn_val1      <span class="tp">STRING</span>    <span class="cm">-- MstrAgrmtVrsn/Val1 (max 50)</span>
+ ,mstr_agrmt_vrsn_val2      <span class="tp">STRING</span>
+
+  <span class="cm">-- Flags</span>
+ ,intra_grp_val             <span class="tp">BOOLEAN</span>
+ ,pst_trad_rsk_rdctn_val1   <span class="tp">STRING</span>    <span class="cm">-- PstTradRskRdctn/Val1</span>
+ ,pst_trad_rsk_rdctn_val2   <span class="tp">STRING</span>
+ ,pltfm_idr_val1            <span class="tp">STRING</span>    <span class="cm">-- PltfmIdr/Val1 — code MIC (ISO 10383)</span>
+ ,pltfm_idr_val2            <span class="tp">STRING</span>
+
+  <span class="cm">-- Dates clés</span>
+ ,exctn_tm_stmp_val1        <span class="tp">TIMESTAMP</span> <span class="cm">-- ExctnTmStmp/Val1</span>
+ ,exctn_tm_stmp_val2        <span class="tp">TIMESTAMP</span>
+ ,fctv_dt_val1              <span class="tp">DATE</span>      <span class="cm">-- FctvDt/Val1</span>
+ ,fctv_dt_val2              <span class="tp">DATE</span>
+ ,xprtn_dt_val1             <span class="tp">DATE</span>
+ ,xprtn_dt_val2             <span class="tp">DATE</span>
+ ,early_termntn_dt_val1     <span class="tp">DATE</span>
+ ,early_termntn_dt_val2     <span class="tp">DATE</span>
+ ,sttlm_dt_val1             <span class="tp">DATE</span>
+ ,sttlm_dt_val2             <span class="tp">DATE</span>
+ ,dlvry_tp_val1             <span class="tp">STRING</span>    <span class="cm">-- PHYS | CASH | OPTL</span>
+ ,dlvry_tp_val2             <span class="tp">STRING</span>
+
+  <span class="cm">-- Prix de transaction (CompareUnitPrice5__1)</span>
+ ,tx_pric_val1_amt          <span class="tp">DECIMAL(25,5)</span>
+ ,tx_pric_val1_ccy          <span class="tp">STRING</span>
+ ,tx_pric_val1_pctg         <span class="tp">DECIMAL(11,10)</span>
+ ,tx_pric_val1_yld          <span class="tp">DECIMAL(11,10)</span>
+ ,tx_pric_val2_amt          <span class="tp">DECIMAL(25,5)</span>
+ ,tx_pric_val2_ccy          <span class="tp">STRING</span>
+ ,tx_pric_val2_pctg         <span class="tp">DECIMAL(11,10)</span>
+ ,tx_pric_val2_yld          <span class="tp">DECIMAL(11,10)</span>
+ ,packgpric_val1_amt        <span class="tp">DECIMAL(25,5)</span>  <span class="cm">-- PackgPric/Val1</span>
+ ,packgpric_val1_ccy        <span class="tp">STRING</span>
+ ,packgpric_val2_amt        <span class="tp">DECIMAL(25,5)</span>
+ ,packgpric_val2_ccy        <span class="tp">STRING</span>
+
+  <span class="cm">-- Montant notionnel 1er jambage (scalaire)</span>
+ ,ntnl_amt_frst_leg_val1_amt <span class="tp">DECIMAL(25,5)</span>
+ ,ntnl_amt_frst_leg_val1_ccy <span class="tp">STRING</span>
+ ,ntnl_amt_frst_leg_val1_sgn <span class="tp">BOOLEAN</span>
+ ,ntnl_amt_frst_leg_val2_amt <span class="tp">DECIMAL(25,5)</span>
+ ,ntnl_amt_frst_leg_val2_ccy <span class="tp">STRING</span>
+ ,ntnl_amt_frst_leg_val2_sgn <span class="tp">BOOLEAN</span>
+  <span class="cm">-- Quantité notionnelle 1er jambage (scalaire)</span>
+ ,ntnl_qty_frst_leg_val1    <span class="tp">DECIMAL(24,19)</span>
+ ,ntnl_qty_frst_leg_val2    <span class="tp">DECIMAL(24,19)</span>
+  <span class="cm">-- Montant notionnel 2ème jambage (scalaire)</span>
+ ,ntnl_amt_scnd_leg_val1_amt <span class="tp">DECIMAL(25,5)</span>
+ ,ntnl_amt_scnd_leg_val1_ccy <span class="tp">STRING</span>
+ ,ntnl_amt_scnd_leg_val1_sgn <span class="tp">BOOLEAN</span>
+ ,ntnl_amt_scnd_leg_val2_amt <span class="tp">DECIMAL(25,5)</span>
+ ,ntnl_amt_scnd_leg_val2_ccy <span class="tp">STRING</span>
+ ,ntnl_amt_scnd_leg_val2_sgn <span class="tp">BOOLEAN</span>
+  <span class="cm">-- Quantité notionnelle 2ème jambage (scalaire)</span>
+ ,ntnl_qty_scnd_leg_val1    <span class="tp">DECIMAL(24,19)</span>
+ ,ntnl_qty_scnd_leg_val2    <span class="tp">DECIMAL(24,19)</span>
+
+  <span class="cm">-- Taux fixe 1er jambage</span>
+ ,fxd_rate_frst_leg_val1_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,fxd_rate_frst_leg_val2_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,fxd_rate_frst_leg_day_cnt_val1 <span class="tp">STRING</span>
+ ,fxd_rate_frst_leg_day_cnt_val2 <span class="tp">STRING</span>
+ ,fxd_rate_frst_leg_pmt_frq_unit_val1 <span class="tp">STRING</span>   <span class="cm">-- DAIL | WEEK | MNTH | QUTR | SEMI | YEAR</span>
+ ,fxd_rate_frst_leg_pmt_frq_unit_val2 <span class="tp">STRING</span>
+ ,fxd_rate_frst_leg_pmt_frq_val_val1  <span class="tp">INT</span>
+ ,fxd_rate_frst_leg_pmt_frq_val_val2  <span class="tp">INT</span>
+
+  <span class="cm">-- Taux flottant 1er jambage</span>
+ ,fltg_rate_frst_leg_id_val1    <span class="tp">STRING</span>   <span class="cm">-- ISIN du taux de référence</span>
+ ,fltg_rate_frst_leg_id_val2    <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_cd_val1    <span class="tp">STRING</span>   <span class="cm">-- code benchmark (EURIBOR, SOFR…)</span>
+ ,fltg_rate_frst_leg_cd_val2    <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_day_cnt_val1 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_day_cnt_val2 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_pmt_frq_unit_val1 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_pmt_frq_unit_val2 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_pmt_frq_val_val1  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_pmt_frq_val_val2  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_ref_prd_unit_val1 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_ref_prd_unit_val2 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_ref_prd_val_val1  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_ref_prd_val_val2  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_rst_frq_unit_val1 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_rst_frq_unit_val2 <span class="tp">STRING</span>
+ ,fltg_rate_frst_leg_rst_frq_val_val1  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_rst_frq_val_val2  <span class="tp">INT</span>
+ ,fltg_rate_frst_leg_sprd_val1_pctg    <span class="tp">DECIMAL(11,10)</span>
+ ,fltg_rate_frst_leg_sprd_val2_pctg    <span class="tp">DECIMAL(11,10)</span>
+
+  <span class="cm">-- Taux fixe &amp; flottant 2ème jambage (même structure, champs abrégés)</span>
+ ,fxd_rate_scnd_leg_val1_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,fxd_rate_scnd_leg_val2_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,fxd_rate_scnd_leg_day_cnt_val1 <span class="tp">STRING</span>
+ ,fxd_rate_scnd_leg_day_cnt_val2 <span class="tp">STRING</span>
+ ,fxd_rate_scnd_leg_pmt_frq_unit_val1 <span class="tp">STRING</span>
+ ,fxd_rate_scnd_leg_pmt_frq_unit_val2 <span class="tp">STRING</span>
+ ,fxd_rate_scnd_leg_pmt_frq_val_val1  <span class="tp">INT</span>
+ ,fxd_rate_scnd_leg_pmt_frq_val_val2  <span class="tp">INT</span>
+ ,fltg_rate_scnd_leg_id_val1    <span class="tp">STRING</span>
+ ,fltg_rate_scnd_leg_id_val2    <span class="tp">STRING</span>
+ ,fltg_rate_scnd_leg_cd_val1    <span class="tp">STRING</span>
+ ,fltg_rate_scnd_leg_cd_val2    <span class="tp">STRING</span>
+ ,fltg_rate_scnd_leg_sprd_val1_pctg    <span class="tp">DECIMAL(11,10)</span>
+ ,fltg_rate_scnd_leg_sprd_val2_pctg    <span class="tp">DECIMAL(11,10)</span>
+
+  <span class="cm">-- Spread paquet &amp; change</span>
+ ,packgsprd_val1_pctg        <span class="tp">DECIMAL(11,10)</span>
+ ,packgsprd_val2_pctg        <span class="tp">DECIMAL(11,10)</span>
+ ,ccy_xchg_rate_val1_base    <span class="tp">STRING</span>    <span class="cm">-- CcyXchgRate/Val1/BaseCcy</span>
+ ,ccy_xchg_rate_val1_qtd     <span class="tp">STRING</span>
+ ,ccy_xchg_rate_val2_base    <span class="tp">STRING</span>
+ ,ccy_xchg_rate_val2_qtd     <span class="tp">STRING</span>
+ ,ccy_fwd_xchg_rate_val1_base <span class="tp">STRING</span>
+ ,ccy_fwd_xchg_rate_val1_qtd  <span class="tp">STRING</span>
+ ,ccy_fwd_xchg_rate_val2_base <span class="tp">STRING</span>
+ ,ccy_fwd_xchg_rate_val2_qtd  <span class="tp">STRING</span>
+ ,ccy_xchg_rate_bsis_val1    <span class="tp">STRING</span>    <span class="cm">-- CcyXchgRateBsis/Val1 (paire ou propriétaire)</span>
+ ,ccy_xchg_rate_bsis_val2    <span class="tp">STRING</span>
+
+  <span class="cm">-- Commodity (AssetClassCommodity6Choice : 14 sous-types)</span>
+ ,cmmdty_val1_cat            <span class="tp">STRING</span>  <span class="cm">-- Agrcltrl|Nrgy|Envttl|Frtlzr|Frght|Indx|IndstrlPdct|Infltn|Metl|MultiCmmdtyExtc|OffclEcnmcSttstcs|Othr|OthrC10|Ppr|Plprpln</span>
+ ,cmmdty_val1_sub_cat        <span class="tp">STRING</span>  <span class="cm">-- ex. GrnOilSeed|Soft|Ptt|OlvOil|Dairy|Grn|... (pour Agrcltrl)</span>
+ ,cmmdty_val1_base_pdct      <span class="tp">STRING</span>  <span class="cm">-- BasePdct — AGRI|NRGY|ENVR|FRGT|METL|INDP|INFL|MCEX|PAPR|POLY...</span>
+ ,cmmdty_val1_sub_pdct       <span class="tp">STRING</span>  <span class="cm">-- SubPdct — GROS|SOFT|POTA|OOLI|DIRY|FRST|SEAF|LSTK|GRIN|ELEC|NGAS...</span>
+ ,cmmdty_val1_addtl_sub_pdct <span class="tp">STRING</span>  <span class="cm">-- AddtlSubPdct — FWHT|SOYB|RPSD|CORN|RICE|OTHR...</span>
+ ,cmmdty_val2_cat            <span class="tp">STRING</span>
+ ,cmmdty_val2_sub_cat        <span class="tp">STRING</span>
+ ,cmmdty_val2_base_pdct      <span class="tp">STRING</span>
+ ,cmmdty_val2_sub_pdct       <span class="tp">STRING</span>
+ ,cmmdty_val2_addtl_sub_pdct <span class="tp">STRING</span>
+
+  <span class="cm">-- Énergie — livraison scalaire</span>
+ ,nrgy_intrx_cnnctn_pt_val1  <span class="tp">STRING</span>  <span class="cm">-- NrgyIntrCnnctnPt/Val1 — EIC</span>
+ ,nrgy_intrx_cnnctn_pt_val2  <span class="tp">STRING</span>
+ ,nrgy_ld_tp_val1             <span class="tp">STRING</span>  <span class="cm">-- NrgyLdTp/Val1</span>
+ ,nrgy_ld_tp_val2             <span class="tp">STRING</span>
+
+  <span class="cm">-- Options</span>
+ ,optn_tp_val1               <span class="tp">STRING</span>        <span class="cm">-- CALL | PUT</span>
+ ,optn_tp_val2               <span class="tp">STRING</span>
+ ,optn_exrc_style_val1       <span class="tp">STRING</span>        <span class="cm">-- AMER | EURO | ASIA | BERM</span>
+ ,optn_exrc_style_val2       <span class="tp">STRING</span>
+ ,optn_strk_pric_val1_amt    <span class="tp">DECIMAL(25,5)</span>
+ ,optn_strk_pric_val1_ccy    <span class="tp">STRING</span>
+ ,optn_strk_pric_val1_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,optn_strk_pric_val2_amt    <span class="tp">DECIMAL(25,5)</span>
+ ,optn_strk_pric_val2_ccy    <span class="tp">STRING</span>
+ ,optn_strk_pric_val2_pctg   <span class="tp">DECIMAL(11,10)</span>
+ ,optn_prm_amt_val1          <span class="tp">DECIMAL(25,5)</span>  <span class="cm">-- OptnPrmAmt/Val1</span>
+ ,optn_prm_amt_val1_ccy      <span class="tp">STRING</span>
+ ,optn_prm_amt_val2          <span class="tp">DECIMAL(25,5)</span>
+ ,optn_prm_amt_val2_ccy      <span class="tp">STRING</span>
+ ,optn_prm_pmt_dt_val1       <span class="tp">DATE</span>
+ ,optn_prm_pmt_dt_val2       <span class="tp">DATE</span>
+ ,optn_mtrty_dt_undrlg_val1  <span class="tp">DATE</span>
+ ,optn_mtrty_dt_undrlg_val2  <span class="tp">DATE</span>
+
+  <span class="cm">-- Crédit</span>
+ ,cdt_snrty_val1             <span class="tp">STRING</span>        <span class="cm">-- SBRD | SNDB | OTHR</span>
+ ,cdt_snrty_val2             <span class="tp">STRING</span>
+ ,cdt_ref_pty_val1_lei       <span class="tp">STRING</span>
+ ,cdt_ref_pty_val2_lei       <span class="tp">STRING</span>
+ ,cdt_srs_val1               <span class="tp">INT</span>
+ ,cdt_srs_val2               <span class="tp">INT</span>
+ ,cdt_vrsn_val1              <span class="tp">INT</span>
+ ,cdt_vrsn_val2              <span class="tp">INT</span>
+ ,cdt_indx_fctr_val1         <span class="tp">DECIMAL(11,10)</span>
+ ,cdt_indx_fctr_val2         <span class="tp">DECIMAL(11,10)</span>
+ ,cdt_trch_val1_id           <span class="tp">STRING</span>        <span class="cm">-- CdtTrch/Val1/Trnchd/Id</span>
+ ,cdt_trch_val2_id           <span class="tp">STRING</span>
+ ,lvl_val1                   <span class="tp">STRING</span>        <span class="cm">-- Lvl/Val1 — PRCS | PDNG | TRGT</span>
+ ,lvl_val2                   <span class="tp">STRING</span></pre></div>
+
+  <!-- ARRAYS -->
+  <div class="section-header" id="t3-arrays" style="margin-top:1.5rem">
+    <h3>Colonnes ARRAY <span class="arr-badge">unbounded</span></h3>
+    <span style="font-size:0.75rem;color:var(--text-3)">maxOccurs="unbounded" dans TxMtchgCrit</span>
+  </div>
+
+  <div class="callout">
+    <strong>Pattern co-indexé.</strong> Plusieurs groupes d'éléments unbounded dans <code>TxMtchgCrit</code> sont co-indexés dans le XSD (dates effectives, dates fin, montants). Ils sont regroupés ici en un seul <code>ARRAY&lt;STRUCT&lt;&hellip;&gt;&gt;</code> par groupe logique plutôt qu'en tableaux parallèles, évitant les désynchronisations à la lecture. Utilisez <code>LATERAL VIEW INLINE()</code> pour les dénormaliser à la requête.
+  </div>
+
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- Échéancier de prix de transaction</span>
+  <span class="cm">-- PricSchdlUadjstdFctvDt[] + PricSchdlUadjstdEndDt[] + TxSchdlPric[]</span>
+ ,pric_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    pric_val1_amt: <span class="tp">DECIMAL(25,5)</span>, pric_val1_ccy: <span class="tp">STRING</span>,
+    pric_val1_pctg: <span class="tp">DECIMAL(11,10)</span>, pric_val1_yld: <span class="tp">DECIMAL(11,10)</span>,
+    pric_val2_amt: <span class="tp">DECIMAL(25,5)</span>, pric_val2_ccy: <span class="tp">STRING</span>,
+    pric_val2_pctg: <span class="tp">DECIMAL(11,10)</span>, pric_val2_yld: <span class="tp">DECIMAL(11,10)</span>
+  &gt;&gt;
+
+  <span class="cm">-- Échéancier montant notionnel 1er jambage</span>
+  <span class="cm">-- NtnlAmtFrstLegUadjstdFctvDt[] + NtnlAmtFrstLegUadjstdEndDt[] + NtnlAmtFrstLegSchdlAmt[]</span>
+ ,ntnl_amt_frst_leg_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    amt_val1: <span class="tp">DECIMAL(25,5)</span>, ccy_val1: <span class="tp">STRING</span>, sgn_val1: <span class="tp">BOOLEAN</span>,
+    amt_val2: <span class="tp">DECIMAL(25,5)</span>, ccy_val2: <span class="tp">STRING</span>, sgn_val2: <span class="tp">BOOLEAN</span>
+  &gt;&gt;
+
+  <span class="cm">-- Échéancier quantité notionnelle 1er jambage</span>
+ ,ntnl_qty_frst_leg_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    qty_val1: <span class="tp">DECIMAL(24,19)</span>, qty_val2: <span class="tp">DECIMAL(24,19)</span>
+  &gt;&gt;
+
+  <span class="cm">-- Échéancier montant notionnel 2ème jambage</span>
+ ,ntnl_amt_scnd_leg_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    amt_val1: <span class="tp">DECIMAL(25,5)</span>, ccy_val1: <span class="tp">STRING</span>, sgn_val1: <span class="tp">BOOLEAN</span>,
+    amt_val2: <span class="tp">DECIMAL(25,5)</span>, ccy_val2: <span class="tp">STRING</span>, sgn_val2: <span class="tp">BOOLEAN</span>
+  &gt;&gt;
+
+  <span class="cm">-- Échéancier quantité notionnelle 2ème jambage</span>
+ ,ntnl_qty_scnd_leg_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    qty_val1: <span class="tp">DECIMAL(24,19)</span>, qty_val2: <span class="tp">DECIMAL(24,19)</span>
+  &gt;&gt;
+
+  <span class="cm">-- Autres paiements (OthrPmt[] — INTR, CEAR, PREMIUM…)</span>
+ ,othr_pmt  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    tp_val1: <span class="tp">STRING</span>,  tp_val2: <span class="tp">STRING</span>,
+    dt_val1: <span class="tp">DATE</span>,   dt_val2: <span class="tp">DATE</span>,
+    amt_val1: <span class="tp">DECIMAL(25,5)</span>, amt_ccy_val1: <span class="tp">STRING</span>,
+    amt_val2: <span class="tp">DECIMAL(25,5)</span>, amt_ccy_val2: <span class="tp">STRING</span>
+  &gt;&gt;
+
+  <span class="cm">-- Échéancier prix de strike option</span>
+  <span class="cm">-- OptnStrkPricSchdlUadjstdFctvDt[] + OptnStrkPricSchdlUadjstdEndDt[] + OptnStrkPricSchdlAmt[]</span>
+ ,optn_strk_pric_schdl  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    uadjstd_fctv_dt_val1: <span class="tp">DATE</span>, uadjstd_fctv_dt_val2: <span class="tp">DATE</span>,
+    uadjstd_end_dt_val1:  <span class="tp">DATE</span>, uadjstd_end_dt_val2:  <span class="tp">DATE</span>,
+    amt_val1: <span class="tp">DECIMAL(25,5)</span>, ccy_val1: <span class="tp">STRING</span>, pctg_val1: <span class="tp">DECIMAL(11,10)</span>,
+    amt_val2: <span class="tp">DECIMAL(25,5)</span>, ccy_val2: <span class="tp">STRING</span>, pctg_val2: <span class="tp">DECIMAL(11,10)</span>
+  &gt;&gt;
+
+  <span class="cm">-- Points/zones de livraison énergie (NrgyDlvryPtOrZone[])</span>
+ ,nrgy_dlvry_pt  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;val1: <span class="tp">STRING</span>, val2: <span class="tp">STRING</span>&gt;&gt;
+
+  <span class="cm">-- Attributs de livraison énergie (DlvryAttr[])</span>
+ ,dlvry_attr  <span class="tp">ARRAY</span>&lt;<span class="tp">STRUCT</span>&lt;
+    dlvry_strt_tm_val1: <span class="tp">STRING</span>,  dlvry_strt_tm_val2: <span class="tp">STRING</span>,
+    dlvry_end_tm_val1:  <span class="tp">STRING</span>,  dlvry_end_tm_val2:  <span class="tp">STRING</span>,
+    day_val1: <span class="tp">STRING</span>,  day_val2: <span class="tp">STRING</span>,
+    dur_val1: <span class="tp">BIGINT</span>,  dur_val2: <span class="tp">BIGINT</span>,
+    wk_dy_val1: <span class="tp">STRING</span>, wk_dy_val2: <span class="tp">STRING</span>,
+    sttlm_pric_val1: <span class="tp">DECIMAL(25,5)</span>, sttlm_pric_ccy_val1: <span class="tp">STRING</span>,
+    sttlm_pric_val2: <span class="tp">DECIMAL(25,5)</span>, sttlm_pric_ccy_val2: <span class="tp">STRING</span>
+  &gt;&gt;</pre></div>
+
+  <!-- MÉTADONNÉES -->
+  <div class="section-header" id="t3-meta" style="margin-top:1.5rem">
+    <h3>Métadonnées &amp; clôture DDL</h3>
+  </div>
+  <div class="code-wrap"><pre class="sql">  <span class="cm">-- Métadonnées d'ingestion</span>
+ ,src_file_nm              <span class="tp">STRING</span>
+ ,ingestion_ts             <span class="tp">TIMESTAMP</span>
+)
+<span class="kw">COMMENT</span> <span class="st">'1 ligne par RcncltnRpt — grain = UTI. Dénormalise Rpt + TxDtls + RcncltnRpt.'</span>
+<span class="kw">STORED AS</span> PARQUET
+<span class="kw">TBLPROPERTIES</span> (<span class="st">'parquet.compress'</span> = <span class="st">'SNAPPY'</span>)
+<span class="kw">PARTITIONED BY</span> (<span class="pn">ref_dt DATE</span>);</pre></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="queries">
+  <div class="section-header">
+    <h2>Exemples de requêtes</h2>
+  </div>
+
+  <div class="query-title">Transactions non réconciliées sur le montant notionnel (Val1 ≠ Val2)</div>
+  <div class="code-wrap"><pre class="sql"><span class="kw">SELECT</span>
+    ref_dt
+   ,rptg_ctr_pty_lei
+   ,othr_ctr_pty_lgl_lei
+   ,unq_tx_idr
+   ,ntnl_amt_frst_leg_val1_amt  <span class="kw">AS</span> ntnl_val1
+   ,ntnl_amt_frst_leg_val2_amt  <span class="kw">AS</span> ntnl_val2
+   ,ABS(ntnl_amt_frst_leg_val1_amt - ntnl_amt_frst_leg_val2_amt) <span class="kw">AS</span> ecart
+<span class="kw">FROM</span>  <span class="tn">datrec_rcncltn_rpt</span>
+<span class="kw">WHERE</span> ref_dt = <span class="st">'2024-03-01'</span>
+  <span class="kw">AND</span>  ntnl_amt_frst_leg_val1_amt != ntnl_amt_frst_leg_val2_amt
+<span class="kw">ORDER BY</span> ecart <span class="kw">DESC</span>;</pre></div>
+
+  <div class="query-title" style="margin-top:1.25rem">Dénormalisation des OthrPmt (LATERAL VIEW INLINE)</div>
+  <div class="code-wrap"><pre class="sql"><span class="kw">SELECT</span>
+    r.unq_tx_idr
+   ,p.tp_val1, p.tp_val2
+   ,p.dt_val1, p.dt_val2
+   ,p.amt_val1, p.amt_ccy_val1
+<span class="kw">FROM</span>  <span class="tn">datrec_rcncltn_rpt</span> r
+<span class="kw">LATERAL VIEW INLINE</span>(r.othr_pmt) t <span class="kw">AS</span> p
+<span class="kw">WHERE</span> r.ref_dt = <span class="st">'2024-03-01'</span>
+  <span class="kw">AND</span>  p.tp_val1 != p.tp_val2;   <span class="cm">-- écart sur le type de paiement</span></pre></div>
+
+  <div class="query-title" style="margin-top:1.25rem">Comptage des non-réconciliations par classe de commodité</div>
+  <div class="code-wrap"><pre class="sql"><span class="kw">SELECT</span>
+    cmmdty_val1_cat            <span class="kw">AS</span> commodity_cat
+   ,cmmdty_val1_sub_cat        <span class="kw">AS</span> commodity_sub
+   ,COUNT(*)                   <span class="kw">AS</span> nb_nrec
+<span class="kw">FROM</span>  <span class="tn">datrec_rcncltn_rpt</span>
+<span class="kw">WHERE</span> ref_dt <span class="kw">BETWEEN</span> <span class="st">'2024-01-01'</span> <span class="kw">AND</span> <span class="st">'2024-03-31'</span>
+  <span class="kw">AND</span>  cmmdty_val1_base_pdct IS NOT NULL
+  <span class="kw">AND</span>  (cmmdty_val1_base_pdct != cmmdty_val2_base_pdct
+        <span class="kw">OR</span> cmmdty_val1_sub_pdct != cmmdty_val2_sub_pdct
+        <span class="kw">OR</span> cmmdty_val1_addtl_sub_pdct != cmmdty_val2_addtl_sub_pdct)
+<span class="kw">GROUP BY</span> 1, 2
+<span class="kw">ORDER BY</span> nb_nrec <span class="kw">DESC</span>;</pre></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<section id="choices">
+  <div class="section-header">
+    <h2>Choix de conception</h2>
+  </div>
+
+  <ul>
+    <li><strong>Dénormalisation totale du grain <code>RcncltnRpt</code>.</strong> Les champs <code>RefDt</code> et identifiants contrepartie sont répétés sur chaque ligne plutôt que normalisés, ce qui évite les jointures dans les requêtes analytiques courantes tout en restant cohérent avec la logique du parseur Python existant.</li>
+    <li><strong>ARRAY&lt;STRUCT&lt;&hellip;&gt;&gt; pour les éléments co-indexés.</strong> Les triplets <em>(dates effectives, dates fin, valeurs)</em> des échéanciers sont regroupés dans un seul tableau de structs. Cela garantit l'intégrité de la co-indexation et simplifie les requêtes <code>LATERAL VIEW INLINE</code>.</li>
+    <li><strong>Commodity aplatie en 5 colonnes scalaires.</strong> Les 14 sous-types de <code>AssetClassCommodity6Choice</code> (Agrcltrl, Nrgy, Envttl, etc.) et leurs propres sous-types sont mappés sur <code>cmmdty_*_cat</code> / <code>cmmdty_*_sub_cat</code> / <code>BasePdct</code> / <code>SubPdct</code> / <code>AddtlSubPdct</code>. Cette approche normalise les 14 hiérarchies en une structure plate cohérente.</li>
+    <li><strong>Partition sur <code>ref_dt DATE</code>.</strong> La date de référence est la dimension temporelle naturelle pour les analyses réglementaires (réconciliation à date J). Elle pilote le pruning de partitions dans la quasi-totalité des requêtes EMIR.</li>
+    <li><strong>Précisions décimales du XSD.</strong> <code>DECIMAL(25,5)</code> pour les montants (types <code>ActiveOrHistoricCurrencyAnd20Amount</code>), <code>DECIMAL(24,19)</code> pour les quantités et deltas (19 décimales prescrites), <code>DECIMAL(11,10)</code> pour les taux et pourcentages.</li>
+    <li><strong><code>datrec_msg_header</code> facultative.</strong> Le BAH n'est pas présent dans tous les fichiers DATREC. La jointure sur <code>biz_msg_idr</code> est optionnelle ; <code>NULL</code> dans la table principale signale un fichier livré sans enveloppe.</li>
+  </ul>
+</section>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const r = document.documentElement;
+  const cur = r.getAttribute('data-theme');
+  r.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+}
+</script>
